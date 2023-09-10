@@ -17,10 +17,7 @@ function App() {
 
   return (
     <div className="container-fluid">
-      <form
-        onSubmit={submit}
-        className="d-flex flex-column gap-4 w-25 bg-white p-3 mt-3 mx-auto"
-      >
+      <form className="d-flex flex-column gap-4 w-25 bg-white p-3 mt-3 mx-auto">
         <input
           placeholder="Write your Name"
           type="text"
@@ -44,7 +41,7 @@ function App() {
           name="date"
           onChange={(e) => getInputs(e.target.value, e.target.name)}
         />
-        <button type="submit">Submit</button>
+        <button onClick={submit}>Submit</button>
       </form>
     </div>
   );
