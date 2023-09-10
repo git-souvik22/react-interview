@@ -4,7 +4,16 @@ const Child = ({ name, changeName }) => {
   return (
     <div>
       <h1>{name}</h1>
-      <button onClick={() => changeName("Developa")}>Change Name </button>
+      <button
+        onClick={
+          name === "Souvik"
+            ? () => changeName("Developer")
+            : () => changeName("Souvik")
+        }
+        className="p-2"
+      >
+        Change Name{" "}
+      </button>
     </div>
   );
 };
