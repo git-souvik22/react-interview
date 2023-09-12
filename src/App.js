@@ -51,6 +51,7 @@ function App() {
 
   const handleCountryClick = (country) => {
     setSelectedCountry(country);
+    setShowCountry(!showCountry);
   };
 
   return (
@@ -137,11 +138,7 @@ function App() {
                   {showCountry && (
                     <ul className="input-list">
                       {countries
-                        .filter((country) =>
-                          country
-                            .toLowerCase()
-                            .includes(selectedCountry.toLowerCase())
-                        )
+                        .filter((country) => country.includes(selectedCountry))
                         .map((country) => (
                           <li
                             key={country}
