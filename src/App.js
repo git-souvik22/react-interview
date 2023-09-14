@@ -145,6 +145,12 @@ function App() {
     setShowCountry(false);
   };
 
+  const handleCountryUpdate = (countryName) => {
+    setSelectedCountry(countryName);
+    setUpdatedUser({ ...updatedUser, country: countryName });
+    setShowCountry(false);
+  };
+
   // state
   let [showState, setShowState] = useState(false);
   let [selectedState, setSelectedState] = useState("");
@@ -161,6 +167,12 @@ function App() {
     setShowState(false);
   };
 
+  const handleStateUpdated = (state) => {
+    setSelectedState(state);
+    setUpdatedUser({ ...updatedUser, state: state });
+    setShowState(false);
+  };
+
   // city
   let [showCity, setShowCity] = useState(false);
   let [selectedCity, setSelectedCity] = useState("");
@@ -174,6 +186,12 @@ function App() {
   const handleCityClick = (city) => {
     setSelectedCity(city);
     setNewUser({ ...newUser, city: city });
+    setShowCity(false);
+  };
+
+  const handleCityUpdate = (city) => {
+    setSelectedCity(city);
+    setUpdatedUser({ ...updatedUser, city: city });
     setShowCity(false);
   };
 
@@ -458,7 +476,7 @@ function App() {
                         .map((country) => (
                           <li
                             key={country}
-                            onClick={() => handleCountryClick(country)}
+                            onClick={() => handleCountryUpdate(country)}
                           >
                             {country}
                           </li>
@@ -486,7 +504,7 @@ function App() {
                         .map((state) => (
                           <li
                             key={state}
-                            onClick={() => handleStateClick(state)}
+                            onClick={() => handleStateUpdated(state)}
                           >
                             {state}
                           </li>
@@ -511,7 +529,7 @@ function App() {
                       {cities
                         .filter((city) => city.includes(selectedCity))
                         .map((city) => (
-                          <li key={city} onClick={() => handleCityClick(city)}>
+                          <li key={city} onClick={() => handleCityUpdate(city)}>
                             {city}
                           </li>
                         ))}
@@ -601,7 +619,7 @@ function App() {
                         className="btn btn-outline-dark me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#editModal"
-                        onClick={() => newUser(user)}
+                        onClick={() => updatedUser(user)}
                       >
                         Edit
                       </button>
