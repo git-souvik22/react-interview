@@ -22,7 +22,6 @@ function App() {
     let { value, name } = event.target;
     setNewUser({ ...newUser, [name]: value });
   };
-  console.log(newUser);
 
   // saving user data
   const saveUserData = async () => {
@@ -162,6 +161,9 @@ function App() {
       setNewUser({ ...newUser, active: "off" });
     }
   };
+
+  // update pre-fetched inputs
+  const [editFieldValues, setEditFieldValues] = useState([]);
 
   return (
     <div className="container-fluid vh-100">
@@ -385,6 +387,7 @@ function App() {
                 <input
                   type="text"
                   name="fullname"
+                  value={editFieldValues.fullname}
                   onChange={setInputData}
                   placeholder="name"
                 />
@@ -394,6 +397,7 @@ function App() {
                 <input
                   type="text"
                   name="email"
+                  value={editFieldValues.email}
                   onChange={setInputData}
                   placeholder="email"
                 />
@@ -403,6 +407,7 @@ function App() {
                 <input
                   type="password"
                   name="password"
+                  value={editFieldValues.password}
                   onChange={setInputData}
                   placeholder="password"
                 />
@@ -566,6 +571,7 @@ function App() {
                         className="btn btn-outline-dark me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#editModal"
+                        onClick={() => setEditFieldValues(user)}
                       >
                         Edit
                       </button>
