@@ -48,15 +48,32 @@ function App() {
   };
 
   // update user
+
+  let updateUserValue = {
+    fullname: "",
+    email: "",
+    password: "",
+    country: "",
+    state: "",
+    city: "",
+    language: [],
+  };
+  let [updatedUser, setUpdatedUser] = useState({ ...updateUserValue });
+
+  let setUpdateData = (event) => {
+    let { value, name } = event.target;
+    setUpdatedUser({ ...updatedUser, [name]: value });
+  };
+
   const updateUserData = async () => {
     let updateData = {
-      fullname: newUser.fullname,
-      email: newUser.email,
-      password: newUser.password,
-      country: newUser.country,
-      state: newUser.state,
-      city: newUser.city,
-      language: newUser.language,
+      fullname: updatedUser.fullname,
+      email: updatedUser.email,
+      password: updatedUser.password,
+      country: updatedUser.country,
+      state: updatedUser.state,
+      city: updatedUser.city,
+      language: updatedUser.language,
     };
 
     let url = "http://localhost:8000/api/update-user";
@@ -92,11 +109,22 @@ function App() {
     setInputValue(e.target.value);
     setShowLanguage(true);
   };
+  const handleInputUpdate = (e) => {
+    setInputValue(e.target.value);
+    setShowLanguage(true);
+  };
 
   const handleLangClick = (lang) => {
     if (!selectedLang.includes(lang)) {
       setSelectedLang([...selectedLang, lang]);
       setNewUser({ ...newUser, language: [...selectedLang, lang] });
+      setInputValue("");
+    }
+  };
+  const handleLangUpdateClick = (lang) => {
+    if (!selectedLang.includes(lang)) {
+      setSelectedLang([...selectedLang, lang]);
+      setUpdatedUser({ ...updatedUser, language: [...selectedLang, lang] });
       setInputValue("");
     }
   };
@@ -163,7 +191,6 @@ function App() {
   };
 
   // update pre-fetched inputs
-  const [editFieldValues, setEditFieldValues] = useState([]);
 
   return (
     <div className="container-fluid vh-100">
@@ -387,8 +414,8 @@ function App() {
                 <input
                   type="text"
                   name="fullname"
-                  value={editFieldValues.fullname}
-                  onChange={setInputData}
+                  // value={editFieldValues.fullname}
+                  onChange={setUpdateData}
                   placeholder="name"
                 />
               </label>
@@ -397,8 +424,8 @@ function App() {
                 <input
                   type="text"
                   name="email"
-                  value={editFieldValues.email}
-                  onChange={setInputData}
+                  // value={editFieldValues.email}
+                  onChange={setUpdateData}
                   placeholder="email"
                 />
               </label>
@@ -407,8 +434,8 @@ function App() {
                 <input
                   type="password"
                   name="password"
-                  value={editFieldValues.password}
-                  onChange={setInputData}
+                  // value={editFieldValues.password}
+                  onChange={setUpdateData}
                   placeholder="password"
                 />
               </label>
@@ -418,7 +445,7 @@ function App() {
                   <input
                     type="text"
                     name="country"
-                    onChange={setInputData}
+                    onChange={setUpdateData}
                     onClick={countryClick}
                     value={selectedCountry}
                     placeholder="country name"
@@ -447,7 +474,7 @@ function App() {
                   <input
                     type="text"
                     name="state"
-                    onChange={setInputData}
+                    onChange={setUpdateData}
                     onClick={stateClick}
                     value={selectedState}
                     placeholder="state name"
@@ -474,7 +501,7 @@ function App() {
                   <input
                     type="text"
                     name="city"
-                    onChange={setInputData}
+                    onChange={setUpdateData}
                     onClick={cityClick}
                     value={selectedCity}
                     placeholder="city name"
@@ -498,7 +525,7 @@ function App() {
                   <input
                     type="text"
                     name="languages"
-                    onChange={handleInputChange}
+                    onChange={handleInputUpdate}
                     value={[...selectedLang, inputValue]}
                     placeholder="Languages..."
                   />
@@ -509,7 +536,10 @@ function App() {
                           lang.toLowerCase().includes(inputValue.toLowerCase())
                         )
                         .map((lang, index) => (
-                          <li key={index} onClick={() => handleLangClick(lang)}>
+                          <li
+                            key={index}
+                            onClick={() => handleLangUpdateClick(lang)}
+                          >
                             {lang}
                           </li>
                         ))}
@@ -571,7 +601,7 @@ function App() {
                         className="btn btn-outline-dark me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#editModal"
-                        onClick={() => setEditFieldValues(user)}
+                        onClick={() => newUser(user)}
                       >
                         Edit
                       </button>
