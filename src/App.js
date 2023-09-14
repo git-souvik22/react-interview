@@ -76,10 +76,6 @@ function App() {
       language: updatedUser.language,
     };
 
-    if (Object.keys(updatedUser).length < 6) {
-      alert("All Fields are Mandatory");
-    }
-
     let url = "http://localhost:8000/api/update-user";
     let { data } = await axios.put(url, updateData);
 
