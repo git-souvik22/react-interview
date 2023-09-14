@@ -76,6 +76,10 @@ function App() {
       language: updatedUser.language,
     };
 
+    if (Object.keys(updatedUser).length < 6) {
+      alert("All Fields are Mandatory");
+    }
+
     let url = "http://localhost:8000/api/update-user";
     let { data } = await axios.put(url, updateData);
 
@@ -432,7 +436,7 @@ function App() {
                 <input
                   type="text"
                   name="fullname"
-                  // value={editFieldValues.fullname}
+                  value={updatedUser.fullname}
                   onChange={setUpdateData}
                   placeholder="name"
                 />
@@ -442,7 +446,7 @@ function App() {
                 <input
                   type="text"
                   name="email"
-                  // value={editFieldValues.email}
+                  value={updatedUser.email}
                   onChange={setUpdateData}
                   placeholder="email"
                 />
@@ -452,7 +456,7 @@ function App() {
                 <input
                   type="password"
                   name="password"
-                  // value={editFieldValues.password}
+                  value={updatedUser.password}
                   onChange={setUpdateData}
                   placeholder="password"
                 />
@@ -575,7 +579,7 @@ function App() {
                 Cancel
               </button>
               <button className="btn btn-primary" onClick={updateUserData}>
-                Save
+                Update
               </button>
             </div>
           </div>
@@ -619,7 +623,7 @@ function App() {
                         className="btn btn-outline-dark me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#editModal"
-                        onClick={() => updatedUser(user)}
+                        onClick={() => setUpdatedUser(user)}
                       >
                         Edit
                       </button>
