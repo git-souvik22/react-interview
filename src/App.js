@@ -87,17 +87,6 @@ function App() {
     }
   };
 
-  // table setup
-  let [tableUsers, setTableUsers] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      let url = "http://localhost:8000/api/";
-      const { data } = await axios.get(url);
-      setTableUsers(data.users);
-    })();
-  }, []);
-
   // languages
   const [inputValue, setInputValue] = useState("");
   const [showLanguage, setShowLanguage] = useState(false);
@@ -208,7 +197,43 @@ function App() {
     }
   };
 
-  // update pre-fetched inputs
+  // table setup
+  let [tableUsers, setTableUsers] = useState([]);
+
+  // pagination
+  const [pageData, setPageData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+
+  const handlePrevPage = () => {
+    if (page === 1) return page;
+    setPage(page - 1);
+  };
+
+  const handleNextPage = () => {
+    if (page === pageCount) return page;
+    setPage(page + 1);
+  };
+
+  useEffect(() => {
+    (async () => {
+      let url = "http://localhost:8000/api/";
+      const { data } = await axios.get(url);
+      setTableUsers(data.users);
+    })();
+  }, [page]);
+
+  useEffect(() => {
+    const pagedataCount = Math.ceil(tableUsers.length / 3);
+    setPageCount(pagedataCount);
+
+    if (page) {
+      const limit = 3;
+      const skip = limit * page;
+      const dataSkip = tableUsers.slice(page === 1 ? 0 : skip - limit, skip);
+      setPageData(dataSkip);
+    }
+  }, [tableUsers, page]);
 
   return (
     <div className="container-fluid vh-100">
@@ -598,43 +623,46 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {tableUsers.map((user, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{user.fullname}</td>
-                <td>{user.email}</td>
-                <td>{user.country}</td>
-                <td>{user.state}</td>
-                <td>{user.city}</td>
-                <td>{user.language.join(", ")}</td>
-                <td>
-                  {moment(user.updatedAt.slice(0, 10), "YYYY-MM-DD").format(
-                    "MMM DD, YYYY"
-                  )}
-                </td>
-                <td>
-                  {user && (
-                    <>
-                      <button
-                        className="btn btn-outline-dark me-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editModal"
-                        onClick={() => setUpdatedUser(user)}
-                      >
-                        Edit
-                      </button>
-                      <button className="btn btn-outline-dark">Delete</button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {pageData.length > 0 &&
+              pageData.map((user, index) => (
+                <tr key={index}>
+                  <td>{page * page + index}</td>
+                  <td>{user.fullname}</td>
+                  <td>{user.email}</td>
+                  <td>{user.country}</td>
+                  <td>{user.state}</td>
+                  <td>{user.city}</td>
+                  <td>{user.language.join(", ")}</td>
+                  <td>
+                    {moment(user.updatedAt.slice(0, 10), "YYYY-MM-DD").format(
+                      "MMM DD, YYYY"
+                    )}
+                  </td>
+                  <td>
+                    {user && (
+                      <>
+                        <button
+                          className="btn btn-outline-dark me-2"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editModal"
+                          onClick={() => setUpdatedUser(user)}
+                        >
+                          Edit
+                        </button>
+                        <button className="btn btn-outline-dark">Delete</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
         <div className="w-100 d-flex justify-content-end mb-3">
           <button
             className="btn btn-outline-primary px-3 py-1"
+            onClick={handlePrevPage}
+            disabled={page === 1}
             style={{
               marginLeft: "10px",
               marginRight: "10px",
@@ -643,38 +671,28 @@ function App() {
             Prev
           </button>
 
-          <button
-            className="btn btn-outline-dark rounded-5"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-            }}
-          >
-            1
-          </button>
-
-          <button
-            className="btn btn-outline-dark rounded-5"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-            }}
-          >
-            2
-          </button>
-
-          <button
-            className="btn btn-outline-dark rounded-5"
-            style={{
-              marginLeft: "10px",
-              marginRight: "10px",
-            }}
-          >
-            3
-          </button>
+          {Array(pageCount)
+            .fill(null)
+            .map((element, index) => {
+              return (
+                <button
+                  className="btn btn-outline-dark rounded-5"
+                  key={index}
+                  style={{
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                  }}
+                  onClick={() => setPage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              );
+            })}
 
           <button
             className="btn btn-outline-primary px-3 py-1"
+            onClick={handleNextPage}
+            disabled={page === pageCount}
             style={{
               marginLeft: "10px",
               marginRight: "10px",
